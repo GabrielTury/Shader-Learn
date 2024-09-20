@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Ocean
-  m_Shader: {fileID: 4800000, guid: aa6d8ceafb57d1d498fe37bb5b36b510, type: 3}
+  m_Name: HLSLOcean
+  m_Shader: {fileID: 4800000, guid: b79bf9a96eee81a4b86f4d2749e8b2c1, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -44,12 +44,16 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 457c3b261609cac49b48d6c4860ca6f9, type: 3}
-        m_Scale: {x: 0.5, y: 0.5}
+        m_Texture: {fileID: 2800000, guid: 49414b051cf1e0b4b8f0568ed4eae84f, type: 3}
+        m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NormalTex:
+        m_Texture: {fileID: 2800000, guid: 457c3b261609cac49b48d6c4860ca6f9, type: 3}
+        m_Scale: {x: 5, y: 5}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
         m_Texture: {fileID: 0}
@@ -61,9 +65,8 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Amplitude: 1
-    - _AmplitudeX: 0.2
-    - _AmplitudeZ: 0.2
+    - _AmplitudeX: 1
+    - _AmplitudeZ: 1
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
@@ -73,20 +76,19 @@ Material:
     - _GlossyReflections: 1
     - _Metallic: 0
     - _Mode: 0
+    - _NormalForce: 0.85
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
-    - _Speed: 10
-    - _SpeedX: 100
-    - _SpeedZ: 100
+    - _SpeedX: 1
+    - _SpeedZ: 1
     - _SrcBlend: 1
     - _UVSec: 0
-    - _WaveLength: 0.5
     - _WaveLengthX: 1
-    - _WaveLengthZ: 0.5
+    - _WaveLengthZ: 1
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 0, g: 0.26011664, b: 0.36862746, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
