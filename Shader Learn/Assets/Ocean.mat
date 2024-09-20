@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: FlagMaterial
-  m_Shader: {fileID: 4800000, guid: 72918ef565e95c249b49e42365038dfa, type: 3}
+  m_Name: Ocean
+  m_Shader: {fileID: 4800000, guid: aa6d8ceafb57d1d498fe37bb5b36b510, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -44,7 +44,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 722ba7f0119116f498f8ffdeadb35f1c, type: 3}
+        m_Texture: {fileID: 2800000, guid: 457c3b261609cac49b48d6c4860ca6f9, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -61,7 +61,9 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Amplitude: 0.3
+    - _Amplitude: 1
+    - _AmplitudeX: 0.5
+    - _AmplitudeZ: 0.5
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
@@ -75,12 +77,16 @@ Material:
     - _Parallax: 0.02
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
-    - _Speed: 25
+    - _Speed: 10
+    - _SpeedX: 100
+    - _SpeedZ: 100
     - _SrcBlend: 1
     - _UVSec: 0
-    - _WaveLength: 5
+    - _WaveLength: 0.5
+    - _WaveLengthX: 1
+    - _WaveLengthZ: 1
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 0, g: 0.26011664, b: 0.36862746, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
