@@ -2,9 +2,19 @@ Shader "PUCLitShaderOcean"
 {
     Properties
     {
-        _MainTex ("Texture", 2D) = "white" {}
-        _NormalTex("Texture", 2D) = "white" {}
-        _NormalForce("NormalForce", Range(-2,2)) = 1
+        _Color  ("Color", Color) = (0,0,1,1)
+        _NormalTex ("Normal", 2D) = "white" {}
+
+        _AmplitudeX ("AmplitudeX", float) = 1
+        _SpeedX ("SpeedX", float) = 1 
+        _WaveLengthX ("WaveLengthX", float) =1
+        
+        _AmplitudeZ ("AmplitudeZ", float) = 1
+        _SpeedZ ("SpeedZ", float) = 1 
+        _WaveLengthZ ("WaveLengthZ", float) =1 
+
+        _Specular("Specular", float) = 1
+        _NormalForce("Normal Force", float) = 1
     }
         SubShader
         {
@@ -19,13 +29,24 @@ Shader "PUCLitShaderOcean"
                     #include  "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 
                
-                texture2D _MainTex;
-                SamplerState sampler_MainTex;
-                float4 _MainTex_ST;
+                float4 _Color;
                 texture2D _NormalTex;
-
                 SamplerState sampler_NormalTex;
+                float4 _NormalTex_ST;
                 float _NormalForce;
+
+                float _AmplitudeX;
+                float _SpeedX;
+                float _WaveLengthX;
+
+                float _AmplitudeZ;
+                float _SpeedZ;
+                float _WaveLengthZ;
+
+                float waveFunction;
+                float waveFunctionZ;
+
+                float _Specular;
 
                 struct Attributes
                 {
@@ -47,38 +68,55 @@ Shader "PUCLitShaderOcean"
                 {
                     Varyings Output;
                     float3 position = Input.position.xyz;
-                    Output.positionVAR = TransformObjectToHClip(position);
-                    Output.uvVAR = (Input.uv * _MainTex_ST.xy + _MainTex_ST.zw);//tiling
+                    
+                    Output.uvVAR = (Input.uv * _NormalTex_ST.xy + _NormalTex_ST.zw);//tiling
                     Output.colorVar = Input.color;
+                    //Input.normal *= _NormalTex_ST;
 
                     Output.normalVar = TransformObjectToWorldNormal(Input.normal);
+
+                    float4 waveZ = 0;
+                    float4 waveX = 0;
+                
+                    waveFunction = _AmplitudeX  * sin( _SpeedX * _Time + _WaveLengthX* position.x);
+                    waveFunctionZ = _AmplitudeZ  * sin( _SpeedZ * _Time + _WaveLengthZ* position.z);
+
+                    waveZ += waveFunctionZ;
+                    waveX += waveFunction;
+                    position.y += waveZ + waveX;
+
+                
+                    Output.positionVAR = TransformObjectToHClip(position);
+               
 
                     return Output;
                 }
 
-                half4 frag(Varyings Input) :SV_TARGET
+                float4 frag(Varyings Input) :SV_TARGET
                 { 
-                    half4 color = Input.colorVar;
+                    float4 color = _Color;
                     
+                    float3 viewDir = normalize(_WorldSpaceCameraPos - Input.positionVAR);
+
                     Light l = GetMainLight();
 
-                   half4 normalmap = _NormalTex.Sample(sampler_NormalTex, half2(_Time.x+Input.uvVAR.x, Input.uvVAR.y))*2-1;
-                   half4 normalmap2 = _NormalTex.Sample(sampler_NormalTex, half2( Input.uvVAR.x, _Time.x + Input.uvVAR.y)) * 2 - 1;
+                    float4 normalmap = _NormalTex.Sample(sampler_NormalTex, float2(_Time.x+Input.uvVAR.x, Input.uvVAR.y)) * 2-1;
+                    float4 normalmap2 = _NormalTex.Sample(sampler_NormalTex, float2( Input.uvVAR.x, _Time.x + Input.uvVAR.y)) * 2 - 1;
                   
-                   normalmap *= normalmap2;
+                    normalmap *= normalmap2;
 
-                   half3 normal = Input.normalVar + normalmap.xzy * _NormalForce;
-                   float intensity = dot(l.direction, normal);
+                    float3 normal = Input.normalVar + normalmap.xzy * _NormalForce;
 
-                   half2 uv = Input.uvVAR +_Time;
+                    float intensity = dot(l.direction, Input.normalVar);
 
+                    float specular = dot(normalize(viewDir + l.direction), normal);
+                    float2 uv = Input.uvVAR +_Time;
 
-                    color *= _MainTex.Sample(sampler_MainTex, uv);
-                    color *= intensity;
-                    return color;
+                    color += float4(l.color,1) * saturate(specular) * _Specular;
+                    //color *= normalmap;
+
+                    return color * intensity;
                 }
-
-
 
             ENDHLSL
         }

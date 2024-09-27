@@ -17,6 +17,7 @@ Shader "Unlit/SOcean"
         _AmplitudeZ ("AmplitudeZ", float) = 1
         _SpeedZ ("SpeedZ", float) = 1 
         _WaveLengthZ ("WaveLengthZ", float) =1 
+
     }
     // bloco de codigo que define o comportamento do shader
     SubShader
