@@ -85,7 +85,7 @@ Shader "PUCLitShaderOcean"
                     waveX += waveFunction;
                     position.y += waveZ + waveX;
 
-                
+                    
                     Output.positionVAR = TransformObjectToHClip(position);
                
 
@@ -96,26 +96,29 @@ Shader "PUCLitShaderOcean"
                 { 
                     float4 color = _Color;
                     
-                    float3 viewDir = normalize(_WorldSpaceCameraPos - Input.positionVAR);
+                    float3 viewDir = GetViewForwardDir();;
 
                     Light l = GetMainLight();
 
-                    float4 normalmap = _NormalTex.Sample(sampler_NormalTex, float2(_Time.x+Input.uvVAR.x, Input.uvVAR.y)) * 2-1;
-                    float4 normalmap2 = _NormalTex.Sample(sampler_NormalTex, float2( Input.uvVAR.x, _Time.x + Input.uvVAR.y)) * 2 - 1;
-                  
-                    normalmap *= normalmap2;
+                    // Sample normal map
+                    float4 normalmap = _NormalTex.Sample(sampler_NormalTex, Input.uvVAR * _NormalTex_ST.xy + _Time.x) * 2 - 1;
 
-                    float3 normal = Input.normalVar + normalmap.xzy * _NormalForce;
+                // Combine normals
+                    float3 normal = normalize(Input.normalVar + normalmap.xyz * _NormalForce);
 
-                    float intensity = dot(l.direction, Input.normalVar);
+                    float intensity = dot(l.direction, normal);
 
-                    float specular = dot(normalize(viewDir + l.direction), normal);
-                    float2 uv = Input.uvVAR +_Time;
+                    float3 halfDir = normalize(viewDir - l.direction);
+                    float specular = pow(max(dot(normal, halfDir), 0.0), _Specular);
 
-                    color += float4(l.color,1) * saturate(specular) * _Specular;
+                    //float2 uv = Input.uvVAR +_Time;
+
+                    color *= intensity;
+
+                    color += float4(l.color,1)  * specular * _Specular;
                     //color *= normalmap;
 
-                    return color * intensity;
+                    return color;
                 }
 
             ENDHLSL
